@@ -46,15 +46,3 @@ $ apt install coreutils
 * remover todas as linhas que contenham o seu IP
 
 
-
-# How to Install:
-
-```
-$ git clone https://github.com/MrEmpy/nullog.git
-
-$ cd nullog 
-
-$ chmod +x nullog.sh
-
-$ ./nullog.sh
-```
