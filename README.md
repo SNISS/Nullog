@@ -7,10 +7,12 @@
 
 <a><p align="center">Nessa modificação usa o shred para excluir arquivos sem poder recupera-lós com facilidade! Eo uso do chattr nos historys para impedir modificações</p></a>
 
+
 ```
 $ apt install coreutils
 
 ```
+
 
 
 # What does it clean?
@@ -40,9 +42,12 @@ $ apt install coreutils
 * all .log files
 
 
+
+
 # Mais opções ( menos barulho ) 
 
 * Pausar  o bash history 
+
 * remover todas as linhas que contenham o seu IP
 
 
