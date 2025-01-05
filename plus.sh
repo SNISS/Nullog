@@ -80,6 +80,10 @@ case $ARGS in
     history
     fileip
     ;;
+   
+  "-h"|"--help")
+    help
+    ;;
   *)
   echo "Opção não encontrada!"
   exit 0;
