@@ -35,7 +35,10 @@ if [[ -n "$2" && "$2" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
    echo ""
    echo "Removendo todas as Linhas de arquivos com o seu IP !"
    echo ""
-  find / -type f -not -path "$(pwd)/*" -exec sed -i "/$2/d" {} \; && find / -type d -name "$2" -not -path "$(pwd)" -exec shred -u -z -v {} \;
+   find / -name "*\.*\.log\." -type f -not -path "$(pwd)/*"   -exec sed -i "/$2/d" {} \;
+   find / -name "*\.log\.*\.*" -type f -not -path "$(pwd)/*"   -exec sed -i "/$2/d" {} \;
+   find / -name "*\.log\.*" -type f  -not -path "$(pwd)/*" -exec sed -i "/$2/d" {} \;
+   
 else
    echo "Digite um valor valido!"
 fi
@@ -46,8 +49,23 @@ fileip(){
 
  if [[ -e "$2" && ! -s "$2" ]]; then
     echo ""
-    for i in $(cat $2); do grep -rl "$i" | xargs 
+    if grep -Evq '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' "$2"; then
+    echo "O arquivo '$file' contém valores que não são IPs."
+    exit 0;
+    else
+      for i in $(cat $2); do
+         find / -no-name "*\.*\.log\." -type f  -not -path "$(pwd)/*" -exec sed -i "/$i/d" {} \;
+         find / -name "*\.log\.*\.*" -type f -not -path "$(pwd)/*"  -exec sed -i "/$i/d" {} \;
+         find / -name "*\.log\.*" -type f -not -path "$(pwd)/*"  -exec sed -i "/$i/d" {} \;
 
+
+         echo ""
+         echo "Efetuado com sucesso meu nobre!"
+      done
+
+    fi
+
+  fi
 
 
 case $ARGS in 
