@@ -44,7 +44,7 @@ $ apt install coreutils
 
 
 
-# Mais opções ( stealh ) 
+## Mais opções ( stealh ) 
 
 * Pausar  os  historys da maquina 
 
