@@ -7,7 +7,7 @@ ARGS=$1
 
 help(){
    echo "Modo de uso:"
-   echo "./$0 -ip SEU-IP"
+   echo "./$0 -ip 127.0.0.1"
    echo ""
    echo "Modo Arquivo: ./$0 -f ips.txt"
 }
