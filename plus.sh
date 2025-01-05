@@ -20,8 +20,7 @@ help(){
 
 
 history(){
-
-
+ 
  echo "Apagando o historico existente da sessão"
  echo ""
  history -c
