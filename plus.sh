@@ -6,7 +6,12 @@ ARGS=$1
 
 
 help(){
+   echo "Ferramenta usada para remover linhas de logs contendo seu IP"
+   echo "by SNISS"
+   echo ""
+   echo ""
    echo "Modo de uso:"
+   echo ""
    echo "./$0 -ip 127.0.0.1"
    echo ""
    echo "Modo Arquivo: ./$0 -f ips.txt"
