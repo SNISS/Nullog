@@ -1,4 +1,4 @@
-<h1 align="center">「🧹」 Ferramenta baseada no Nullog do MrEmpy </h1>
+<h1 align="center">「🧹」 Ferramenta baseada no Nullog do BrSock </h1>
 
 <a><p align="center">Nullog is a tool created in Shell Script with the aim of automating the cleaning of logs after an invasion of a Linux system.</p></a>
 
@@ -9,7 +9,7 @@
 
 
 ```
-$ apt install coreutils
+$ apt install coreutils -y
 
 ```
 
@@ -49,5 +49,4 @@ $ apt install coreutils
 * Pausar  os  historys da maquina 
 
 * remover todas as linhas que contenham o seu IP
-
 
