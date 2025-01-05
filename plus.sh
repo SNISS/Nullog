@@ -4,8 +4,8 @@
 ARGS=$1
 
 
-help(){
 
+help(){
    echo "Modo de uso:"
    echo "./$0 -ip SEU-IP"
    echo ""
@@ -66,7 +66,14 @@ fileip(){
     fi
 
   fi
+}
 
+if [ ! -n "$ARGS" ]; then
+
+   help
+   exit 0;
+
+fi
 
 case $ARGS in 
 
