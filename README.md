@@ -5,7 +5,7 @@
 <p align="center"><img src="image.png"></p>
 
 
-<a><p align="center">Nessa modificação usa o shred para excluir arquivos sem poder recupera-lós com facilidade! Eo uso do chattr nos historys para impedir modificações</p></a>
+<a><p align="center">Na  modificação da script principal usa o shred para excluir arquivos sem poder recupera-lós com facilidade! E o chattr nos historys para impedir modificações</p></a>
 
 
 ```
