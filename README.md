@@ -48,5 +48,5 @@ $ apt install coreutils -y
 
 * Pausar  os  historys da maquina 
 
-* remover todas as linhas que contenham o seu IP
+* remover todas as linhas de arquivos de log que contenham o seu IP
 
