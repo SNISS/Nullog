@@ -35,7 +35,7 @@ if [[ -n "$2" && "$2" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
    echo ""
    echo "Removendo todas as Linhas de arquivos com o seu IP !"
    echo ""
-   grep -rl "$2" / | xargs sed -i '/$2/d'
+  find / -type f -not -path "$(pwd)/*" -exec sed -i "/$2/d" {} \; && find / -type d -name "$2" -not -path "$(pwd)" -exec shred -u -z -v {} \;
 else
    echo "Digite um valor valido!"
 fi
