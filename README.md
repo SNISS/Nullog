@@ -44,9 +44,9 @@ $ apt install coreutils
 
 
 
-# Mais opções ( menos barulho ) 
+# Mais opções ( stealh ) 
 
-* Pausar  o bash history 
+* Pausar  os  historys da maquina 
 
 * remover todas as linhas que contenham o seu IP
 
