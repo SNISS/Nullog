@@ -40,68 +40,37 @@ banner() {
 }
 
 remove_login() {
-      shred -zfxn 10 /var/log/wtmp 2>/dev/null
-      shred -zfxn 10 /var/log/btmp 2>/dev/null
-      shred -zfxn 10 /var/log/lastlog 2>/dev/null
+    for log in /var/log/wtmp /var/log/btmp /var/log/lastlog; do
+        shred -zfxn 10 "$log" 2>/dev/null
+    done
 }
 
 other_logs() {
-      shred -zfxn 10 /var/log/messages 2>/dev/null
-      shred -zfxn 10 /var/log/maillog 2>/dev/null
-      shred -zfxn 10 /var/log/secure 2>/dev/null
-      shred -zfxn 10 /var/log/syslog 2>/dev/null
-      shred -zfxn 10 /var/log/dmesg 2>/dev/null
-
-    for mail_f in $(find /var/log/ -name "mail\.*" 2>/dev/null)
-        do
-              shred -zfxn 10 $mail_f 2>/dev/null
+    for log in /var/log/messages /var/log/maillog /var/log/secure /var/log/syslog /var/log/dmesg; do
+        shred -zfxn 10 "$log" 2>/dev/null
     done
+
+    find /var/log/ -name "mail.*" -exec shred -zfxn 10 {} + 2>/dev/null
 }
 
 bash_history() {
-    for bash_history in $(find / -name ".bash_history" 2>/dev/null)
-        do
-               for zsh_history in $( find / -name ".zsh_history" 2>/dev/null)
-               chattr +i $bash_history && chattr +i $zsh_history  2>/dev/null
-    done
+    find / -name ".bash_history" -exec chattr +i {} + 2>/dev/null
 }
 
 zsh_history() {
-    for zsh_history in $(find / -name ".zsh_history" 2>/dev/null)
-        do
-              shred -zfxn 10 $zsh_history 2>/dev/null
-    done
+    find / -name ".zsh_history" -exec shred -zfxn 10 {} + 2>/dev/null
 }
 
 mac_root_logs() {
-
-    for mac_root_logs in $(find ~/Library  -name "*.log" 2>/dev/null)
-        do
-              shred -zfxn 10 $mac_root_logs 2>/dev/null
-    done
+    find ~/Library -name "*.log" -exec shred -zfxn 10 {} + 2>/dev/null
 }
 
 mac_normal_logs() {
-    
-    for mac_normal_logs in $(find /Library  -name "*.log" 2>/dev/null)
-        do
-              shred -zfxn 10 $mac_normal_logs 2>/dev/null
-    done
-    
+    find /Library -name "*.log" -exec shred -zfxn 10 {} + 2>/dev/null
 }
 
 logs_f() {
-
-   for i in $(find / -name "*\.log\.*"); then  shred -zfxn 10 $i 2>/dev/null >> .logs ; done
-    for i in $(find / -name "*\.log\.*\.*"); then shred -zfxn 10 $i  2>/dev/null >> .logs ; done
-    for i in $(find / -name "*\.*\.log\.*"); then shred -zfxn 10 $i  2>/dev/null >> .logs ; done
-
-    while read log_f
-        do
-              shred -zfxn 10 $log_f 2>/dev/null
-            printf "\n\033[0;32m[+] \033[0;37mLog deleted: $log_f"
-    done < .logs
-    rm -f .logs
+    find / -name "*.log.*" -exec shred -zfxn 10 {} + 2>/dev/null
 }
 
 main() {
@@ -117,23 +86,37 @@ main() {
     sleep 1
     printf '\n\033[0;34m[*] \033[0;37mClearing Bash histories\n'
     bash_history
+    printf '\033[0;32m[+] \033[0;37mBash histories cleared successfully!\n'
+    sleep 1
     printf '\n\033[0;34m[*] \033[0;37mClearing Zsh histories\n'
     zsh_history
+    printf '\033[0;32m[+] \033[0;37mZsh histories cleared successfully!\n'
     sleep 1
     printf '\n\033[0;34m[*] \033[0;37mClearing Mac root logs\n'
-    mac_root_logs()
+    mac_root_logs
+    printf '\033[0;32m[+] \033[0;37mMac root logs cleared successfully!\n'
     sleep 1
     printf '\n\033[0;34m[*] \033[0;37mClearing Mac normal logs\n'
-    mac_normal_logs()
-    printf '\n\n\033[0;32m[+] \033[0;37mSystem history deleted successfully!\n'
-    printf '\n\033[0;34m[*] \033[0;37mDeleting content inside log files'
+    mac_normal_logs
+    printf '\033[0;32m[+] \033[0;37mMac normal logs cleared successfully!\n'
+    printf '\n\033[0;34m[*] \033[0;37mDeleting other log files\n'
     logs_f
-    printf '\n\n\033[0;32m[+] \033[0;37mLog files cleared successfully!\n'
-    printf '\n\033[0;34m[*] \033[0;37mClear command history "history -c"\n'
+    printf '\033[0;32m[+] \033[0;37mLog files cleared successfully!\n'
 }
 
-if [[ $EUID -ne 0 ]]; then
-   printf "\033[0;34m[*] \033[0;37mYou are not running Nullog as root, for that reason only some logs that you have permission will be deleted. Do you really want to continue? [Press ENTER]" 
-   read
-   main
+if [ "$(id -u)" -ne 0 ]; then
+    printf "\033[0;34m[*] \033[0;37mYou are not running Nullog as root. Only logs with sufficient permissions will be deleted. Press ENTER to continue." 
+    read -r
+fi
+
+
+if [ ! command -v shred &>/dev/null; ]  then
+main
+
+
+else
+
+   echo "Instale o Shred antes de usar a ferramenta!";
+   exit 0;
+
 fi
