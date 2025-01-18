@@ -1,105 +1,72 @@
 #!/bin/bash
 
-
 ARGS=$1
 
-
-
-help(){
-   echo "Ferramenta usada para remover linhas de logs contendo seu IP"
-   echo "by SNISS"
-   echo ""
-   echo ""
-   echo "Modo de uso:"
-   echo ""
-   echo "./$0 -ip 127.0.0.1"
-   echo ""
-   echo "Modo Arquivo: ./$0 -f ips.txt"
-}
-
-
-
-history(){
- 
- echo "Apagando o historico existente da sessão"
- echo ""
- history -c
-
- echo ""
- echo "Pausando todos os  historicos!"
- echo ""
- unset SSH_CLIENT SSH_CONNECTION; LESSHISTFILE=- MYSQL_HISTFILE=/dev/null TERM=xterm-256color HISTFILE=/dev/null BASH_HISTORY=/dev/null exec -a [ntp] script -qc 'source <(resize 2>/dev/null); exec -a [uid] bash -i' /dev/null
-
-
-
-
-ip(){
-
-if [[ -n "$2" && "$2" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-   echo ""
-   echo "Removendo todas as Linhas de arquivos com o seu IP !"
-   echo ""
-   find / -name "*\.*\.log\." -type f -not -path "$(pwd)/*"   -exec sed -i "/$2/d" {} \;
-   find / -name "*\.log\.*\.*" -type f -not -path "$(pwd)/*"   -exec sed -i "/$2/d" {} \;
-   find / -name "*\.log\.*" -type f  -not -path "$(pwd)/*" -exec sed -i "/$2/d" {} \;
-   
-else
-   echo "Digite um valor valido!"
-fi
-
-}
-
-fileip(){
-
- if [[ -e "$2" && ! -s "$2" ]]; then
+help() {
+    echo "Ferramenta usada para remover linhas de logs contendo seu IP"
+    echo "by SNISS"
     echo ""
-    if grep -Evq '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' "$2"; then
-    echo "O arquivo '$file' contém valores que não são IPs."
-    exit 0;
-    else
-      for i in $(cat $2); do
-         find / -no-name "*\.*\.log\." -type f  -not -path "$(pwd)/*" -exec sed -i "/$i/d" {} \;
-         find / -name "*\.log\.*\.*" -type f -not -path "$(pwd)/*"  -exec sed -i "/$i/d" {} \;
-         find / -name "*\.log\.*" -type f -not -path "$(pwd)/*"  -exec sed -i "/$i/d" {} \;
-
-
-         echo ""
-         echo "Efetuado com sucesso meu nobre!"
-      done
-
-    fi
-
-  fi
+    echo "Modo de uso:"
+    echo "$0 -ip 127.0.0.1"
+    echo "$0 -f ips.txt"
 }
 
-if [ ! -n "$ARGS" ]; then
+history_clear() {
+    echo "Apagando o histórico existente da sessão..."
+    history -c
+    unset SSH_CLIENT SSH_CONNECTION
+    export HISTFILE=/dev/null
+    echo "Histórico limpo e pausado."
+}
 
-   help
-   exit 0;
 
+ip() {
+    if [[ -n "$2" && "$2" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        echo "Removendo todas as linhas de logs contendo o IP: $2"
+        find / -type f -name "*.log*" ! -path "$(pwd)/*" -exec sed -i "/$2/d" {} \;
+        echo "Operação concluída."
+    else
+        echo "Digite um IP válido!"
+    fi
+}
+
+
+fileip() {
+    if [[ -e "$2" && -s "$2" ]]; then
+        if grep -Evq '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' "$2"; then
+            echo "O arquivo '$2' contém valores que não são IPs."
+            exit 1
+        else
+            echo "Removendo IPs listados no arquivo '$2'..."
+            while IFS= read -r ip; do
+                find / -type f -name "*.log*" ! -path "$(pwd)/*" -exec sed -i "/$ip/d" {} \;
+            done < "$2"
+            echo "Operação concluída."
+        fi
+    else
+        echo "O arquivo '$2' está vazio ou não existe."
+    fi
+}
+
+if [[ -z "$ARGS" ]]; then
+    help
+    exit 0
 fi
 
-case $ARGS in 
-
-
-"-ip"|"--ip")
-    history
-    ip
-    ;;
-
- "-f"|"--file")
-    history
-    fileip
-    ;;
-   
-  "-h"|"--help")
-    help
-    ;;
-  *)
-  echo "Opção não encontrada!"
-  exit 0;
-  ;;
-
-
+case $ARGS in
+    "-ip"|"--ip")
+        history_clear
+        ip "$@" 
+        ;;
+    "-f"|"--file")
+        history_clear
+        fileip "$@" 
+        ;;
+    "-h"|"--help")
+        help
+        ;;
+    *)
+        echo "Opção não encontrada!"
+        exit 1
+        ;;
 esac
-
