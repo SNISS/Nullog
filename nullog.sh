@@ -110,7 +110,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 
-if [ ! command -v shred &>/dev/null; ]  then
+if [ ! command -v shred &>/dev/null ]; then
 main
 
 
