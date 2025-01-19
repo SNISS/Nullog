@@ -10,7 +10,6 @@
 
 ```
 $ apt install coreutils -y
-
 ```
 
 
