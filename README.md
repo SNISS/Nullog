@@ -44,7 +44,7 @@ $ apt install coreutils -y
 
 
 
-## Plus script ( stealh ) 
+## Plus script ( stealth mode ) 
 
 * Pausar  os  historys da maquina 
 
